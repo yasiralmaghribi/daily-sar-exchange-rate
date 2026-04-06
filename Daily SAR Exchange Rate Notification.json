@@ -1,0 +1,91 @@
+{
+  "name": "Daily SAR Exchange Rate Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "6891864b-8e93-465b-b631-36b152cf7cb9",
+      "name": "Daily Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://open.er-api.com/v6/latest/USD",
+        "options": {}
+      },
+      "id": "7f797a21-c95e-4a2f-80b0-b7822a9fecbb",
+      "name": "Fetch USD Exchange Rates",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        464,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ntfy.sh/yasir-biz-intel",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "text/plain",
+        "body": "=USD to SAR today: {{ $json.rates.SAR }}\n\n",
+        "options": {}
+      },
+      "id": "77904ca9-70ee-4c5d-afb3-d65265808be4",
+      "name": "Send SAR Rate to ntfy.sh",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        688,
+        304
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Daily Schedule": {
+      "main": [
+        [
+          {
+            "node": "Fetch USD Exchange Rates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch USD Exchange Rates": {
+      "main": [
+        [
+          {
+            "node": "Send SAR Rate to ntfy.sh",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "1f3a5ba0-2874-4104-949c-7fb136495dc4",
+  "meta": {
+    "instanceId": "c77bd7de5cf011a9190752832a9b501ef1a3096e6ac8c60b07a503b5a73e3f9c"
+  },
+  "id": "D7Rva2vPj0RvA08d",
+  "tags": []
+}
